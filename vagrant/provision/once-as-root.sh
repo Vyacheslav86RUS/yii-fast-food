@@ -46,7 +46,8 @@ cat << EOF > /etc/php/7.0/mods-available/xdebug.ini
 zend_extension=xdebug.so
 xdebug.remote_enable=1
 xdebug.remote_connect_back=1
-xdebug.remote_port=9000
+xdebug.remote_host=192.168.83.137
+xdebug.remote_port=80
 xdebug.remote_autostart=1
 EOF
 echo "Done!"

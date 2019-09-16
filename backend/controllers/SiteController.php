@@ -18,20 +18,6 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -74,16 +60,17 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+        $this->layout = 'main-login';
+
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
-        } else {
-            $model->password = '';
+        }
+        $model->password = '';
 
-            return $this->render('login', [
+        return $this->render('login', [
                 'model' => $model,
             ]);
-        }
     }
 
     /**
