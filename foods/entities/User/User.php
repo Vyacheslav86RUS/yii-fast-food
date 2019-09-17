@@ -36,14 +36,15 @@ class User extends ActiveRecord implements IdentityInterface
      * @return User
      * @throws \yii\base\Exception
      */
-    public static function signup($username, $email, $password)
+    public static function requestSignup($username, $email, $password)
     {
         $user = new User();
         $user->username = $username;
         $user->email = $email;
         $user->setPassword($password);
         $user->created_at = time();
-        $user->status = self::STATUS_ACTIVE;
+        $user->status = self::STATUS_WAIT;
+        $user->generateEmailConfirmTocen();
         $user->generateAuthKey();
 
         return $user;
@@ -139,6 +140,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->status === self::STATUS_ACTIVE;
     }
 
+    public function isWait()
+    {
+        return $this->status === self::STATUS_WAIT;
+    }
+
     /**
      * Validates password
      *
@@ -149,6 +155,27 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
+
+    public function confirmSignup()
+    {
+        if (!$this->isWait()) {
+            throw new \DomainException('Пользователь уже активирован');
+        }
+
+        $this->status = self::STATUS_ACTIVE;
+        $this->removeEmailConfirmToken();
+    }
+
+    public function generateEmailConfirmTocen()
+    {
+        $this->email_confirm_token = Yii::$app->security->generateRandomString();
+    }
+
+    public function removeEmailConfirmToken()
+    {
+        $this->email_confirm_token = null;
+    }
+
 
     /**
      * @throws \yii\base\Exception

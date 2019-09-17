@@ -6,9 +6,17 @@ use Yii;
 use foods\entities\User\User;
 use foods\forms\auth\PasswordResetRequestForm;
 use foods\forms\auth\ResetPasswordForm;
+use yii\mail\MailerInterface;
 
 class PasswordResetService
 {
+    private $mailer;
+
+    public function __construct(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     /**
      * @param PasswordResetRequestForm $form
      *
@@ -30,13 +38,11 @@ class PasswordResetService
         if (!$user->save()) {
             throw new \RuntimeException('Saving error.');
         }
-        $sent = Yii::$app
-            ->mailer
+        $sent = $this->mailer
             ->compose(
                 ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
                 ['user' => $user]
             )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($user->email)
             ->setSubject('Password reset for ' . Yii::$app->name)
             ->send();
@@ -68,10 +74,12 @@ class PasswordResetService
     public function reset($token, ResetPasswordForm $form)
     {
         $user = User::findByPasswordResetToken($token);
+
         if (!$user) {
             throw new \DomainException('User is not found.');
         }
         $user->resetPassword($form->password);
+
         if (!$user->save()) {
             throw new \RuntimeException('Saving error.');
         }
