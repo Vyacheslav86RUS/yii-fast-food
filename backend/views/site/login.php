@@ -1,10 +1,12 @@
 <?php
+
+use common\widgets\Alert;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \common\models\LoginForm */
+/* @var $model \common\forms\LoginForm */
 
 $this->title = 'Sign In';
 
@@ -26,6 +28,8 @@ $fieldOptions2 = [
     <!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
+
+        <?= Alert::widget() ?>
 
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
@@ -49,7 +53,6 @@ $fieldOptions2 = [
             </div>
             <!-- /.col -->
         </div>
-
 
         <?php ActiveForm::end(); ?>
 

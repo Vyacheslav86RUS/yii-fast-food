@@ -13,6 +13,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => [
+        'log',
         'common\bootstrap\SetUp',
     ],
     'modules' => [],
@@ -25,7 +26,7 @@ return [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => [
-                'name' => '_identity-backend',
+                'name' => '_identity',
                 'httpOnly' => true,
                 'domain' => $params['cookieDomain'],
             ],

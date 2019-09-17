@@ -3,6 +3,7 @@
 namespace foods\entities\User;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -24,42 +25,118 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    use InstantiateTrait;
-
     const STATUS_WAIT = 0;
     const STATUS_ACTIVE = 10;
 
     /**
      * @param string $username
      * @param string $email
-     * @param string $phone
      * @param string $password
      *
      * @return User
      * @throws \yii\base\Exception
      */
-    public static function create($username, $email, $phone, $password)
+    public static function signup($username, $email, $password)
     {
         $user = new User();
         $user->username = $username;
         $user->email = $email;
-        $user->phone = $phone;
-        $user->setPassword(!empty($password) ? $password : Yii::$app->security->generateRandomString());
-        $user->create_at = time();
+        $user->setPassword($password);
+        $user->created_at = time();
         $user->status = self::STATUS_ACTIVE;
-        $user->auth_key = Yii::$app->security->generateRandomString();
+        $user->generateAuthKey();
 
         return $user;
     }
 
-    public function isActive(): bool
-    {
-        return $this->status === self::STATUS_ACTIVE;
-    }
-
+    /**
+     * @inheritdoc
+     */
     public static function tableName()
     {
         return '{{%user}}';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_WAIT]],
+        ];
+    }
+
+    /**
+     * @throws \yii\base\Exception
+     */
+    public function requestPasswordReset()
+    {
+        if (!empty($this->password_reset_token) && self::isPasswordResetTokenValid($this->password_reset_token)) {
+            throw new \DomainException('Password resetting is already requested.');
+        }
+        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    /**
+     * @param $password
+     *
+     * @throws \yii\base\Exception
+     */
+    public function resetPassword($password): void
+    {
+        if (empty($this->password_reset_token)) {
+            throw new \DomainException('Password resetting is not requested.');
+        }
+        $this->setPassword($password);
+        $this->password_reset_token = null;
+    }
+
+    /**
+     * @param $token
+     *
+     * @return User|null
+     */
+    public static function findByPasswordResetToken($token)
+    {
+        if (!static::isPasswordResetTokenValid($token)) {
+            return null;
+        }
+        return static::findOne([
+            'password_reset_token' => $token,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return bool
+     */
+    public static function isPasswordResetTokenValid($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        return $timestamp + $expire >= time();
+    }
+
+    public function isActive()
+    {
+        return $this->status === self::STATUS_ACTIVE;
     }
 
     /**
@@ -71,6 +148,19 @@ class User extends ActiveRecord implements IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    /**
+     * @throws \yii\base\Exception
+     */
+    private function generatePasswordResetToken()
+    {
+        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    private function removePasswordResetToken()
+    {
+        $this->password_reset_token = null;
     }
 
     /**
@@ -87,6 +177,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates "remember me" authentication key
+     *
+     * @throws \yii\base\Exception
      */
     private function generateAuthKey()
     {
@@ -104,7 +196,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        // TODO: Implement findIdentity() method.
+        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -120,7 +212,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        // TODO: Implement findIdentityByAccessToken() method.
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
     /**
@@ -130,7 +222,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-        // TODO: Implement getId() method.
+        return $this->getPrimaryKey();
     }
 
     /**
@@ -152,7 +244,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
+        return $this->auth_key;
     }
 
     /**
@@ -167,6 +259,6 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
+        return $this->getAuthKey() === $authKey;
     }
 }

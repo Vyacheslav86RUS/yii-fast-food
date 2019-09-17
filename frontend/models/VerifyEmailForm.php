@@ -2,7 +2,7 @@
 
 namespace frontend\models;
 
-use common\models\User;
+use foods\entities\User\User;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
 
