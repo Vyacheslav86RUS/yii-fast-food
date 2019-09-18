@@ -17,41 +17,29 @@ class AuthController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * Logs in a user.
-     *
-     * @param AuthController $authController
-     *
-     * @return mixed
-     */
-    public function actionLogin(AuthController $authController)
+    public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            return $authController->goHome();
+            return $this->goHome();
         }
 
         $form = new LoginForm();
-        if ($form->load(Yii::$app->request->post()) && $form->login()) {
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             try {
                 $user = $this->service->auth($form);
                 Yii::$app->user->login($user, $form->rememberMe ? 3600 * 24 * 30 : 0);
 
-                return $authController->goBack();
+                return $this->goBack();
             } catch (\DomainException $e) {
                 Yii::$app->session->setFlash('error', $e->getMessage());
             }
         }
 
-        return $authController->render('login', [
+        return $this->render('login', [
             'model' => $form,
         ]);
     }
 
-    /**
-     * Logs out the current user.
-     *
-     * @return mixed
-     */
     public function actionLogout()
     {
         Yii::$app->user->logout();

@@ -2,6 +2,7 @@
 
 namespace foods\entities\User;
 
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -22,6 +23,8 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ *
+ * @property Network[] $networks
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -50,12 +53,55 @@ class User extends ActiveRecord implements IdentityInterface
         return $user;
     }
 
+    public function confirmSignup()
+    {
+        if (!$this->isWait()) {
+            throw new \DomainException('Пользователь уже активирован');
+        }
+
+        $this->status = self::STATUS_ACTIVE;
+        $this->removeEmailConfirmToken();
+    }
+
+    /**
+     * @param $network
+     * @param $identity
+     *
+     * @return User
+     * @throws \yii\base\Exception
+     */
+    public static function signupByNetwork($network, $identity)
+    {
+        $user = new User();
+        $user->created_at = time();
+        $user->status = self::STATUS_ACTIVE;
+        $user->generateAuthKey();
+        $user->networks = [
+            Network::create($network, $identity)
+        ];
+
+        return $user;
+    }
+
+    public function attachNetwork($network, $identity)
+    {
+        $networks = $this->networks;
+
+        foreach ($networks as $current) {
+            if ($current->isFor($network, $identity)) {
+                throw new \DomainException('Социальная сеть уже подключена.');
+            }
+        }
+        $networks[] = Network::create($network, $identity);
+        $this->networks = $networks;
+    }
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return '{{%users}}';
     }
 
     /**
@@ -65,6 +111,17 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             TimestampBehavior::className(),
+            [
+                'class' => SaveRelationsBehavior::class,
+                'relations' => ['networks'],
+            ],
+        ];
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
         ];
     }
 
@@ -145,6 +202,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->status === self::STATUS_WAIT;
     }
 
+    public function getNetworks()
+    {
+        return $this->hasMany(Network::class, ['user_id' => 'id']);
+    }
+
     /**
      * Validates password
      *
@@ -154,16 +216,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
-    }
-
-    public function confirmSignup()
-    {
-        if (!$this->isWait()) {
-            throw new \DomainException('Пользователь уже активирован');
-        }
-
-        $this->status = self::STATUS_ACTIVE;
-        $this->removeEmailConfirmToken();
     }
 
     public function generateEmailConfirmTocen()

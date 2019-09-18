@@ -3,8 +3,9 @@
 namespace foods\forms\auth;
 
 use foods\entities\User\User;
+use yii\base\Model;
 
-class SignupForm
+class SignupForm extends Model
 {
     public $username;
     public $email;

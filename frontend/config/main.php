@@ -6,6 +6,8 @@ $params = array_merge(
     require __DIR__ . '/params-local.php'
 );
 
+$clients = require 'clients.php';
+
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
@@ -15,12 +17,16 @@ return [
     ],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => $clients,
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
             'cookieValidationKey' => $params['cookieValidationKey'],
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'foods\entities\User\User',
             'enableAutoLogin' => true,
             'identityCookie' => [
                 'name' => '_identity',

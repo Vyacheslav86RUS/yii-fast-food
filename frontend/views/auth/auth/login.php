@@ -4,6 +4,7 @@
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model foods\forms\auth\LoginForm */
 
+use yii\authclient\widgets\AuthChoice;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
@@ -34,6 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
             <?php ActiveForm::end(); ?>
+
+            <h2>Socials</h2>
+            <?= AuthChoice::widget([
+                    'baseAuthUrl' => ['auth/network/auth']
+            ]) ?>
         </div>
     </div>
 </div>
