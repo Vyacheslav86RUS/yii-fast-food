@@ -35,17 +35,25 @@ class UserRepository
         return (bool) User::findByPasswordResetToken($token);
     }
 
-    public function save(User $user): void
+    /**
+     * @param User $user
+     */
+    public function save($user)
     {
         if (!$user->save()) {
-            throw new \RuntimeException('Saving error.');
+            throw new \RuntimeException('Ошибка сохранения пользователя.');
         }
     }
 
-    private function getBy(array $condition): User
+    /**
+     * @param array $condition
+     *
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    private function getBy($condition)
     {
         if (!$user = User::find()->andWhere($condition)->limit(1)->one()) {
-            throw new NotFoundException('User not found.');
+            throw new NotFoundException('Пользователь не найден.');
         }
         return $user;
     }
