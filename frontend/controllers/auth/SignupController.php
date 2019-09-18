@@ -30,7 +30,7 @@ class SignupController extends Controller
                 'only' => ['index'],
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['request'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
