@@ -28,8 +28,36 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_WAIT = 0;
+    const STATUS_WAIT = 9;
     const STATUS_ACTIVE = 10;
+
+    /**
+     * @param string $username
+     * @param string $email
+     * @param string $password
+     *
+     * @return User
+     * @throws \yii\base\Exception
+     */
+    public static function create($username, $email, $password)
+    {
+        $user = new User();
+        $user->username = $username;
+        $user->email = $email;
+        $user->setPassword(!empty($password) ? $password : Yii::$app->security->generateRandomString());
+        $user->created_at = time();
+        $user->status = self::STATUS_ACTIVE;
+        $user->generateAuthKey();
+
+        return $user;
+    }
+
+    public function edit($username, $email)
+    {
+        $this->username = $username;
+        $this->email = $email;
+        $this->updated_at = time();
+    }
 
     /**
      * @param string $username
@@ -47,7 +75,7 @@ class User extends ActiveRecord implements IdentityInterface
         $user->setPassword($password);
         $user->created_at = time();
         $user->status = self::STATUS_WAIT;
-        $user->generateEmailConfirmTocen();
+        $user->email_confirm_token = Yii::$app->security->generateRandomString();
         $user->generateAuthKey();
 
         return $user;
@@ -122,17 +150,6 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             self::SCENARIO_DEFAULT => self::OP_ALL,
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_WAIT]],
         ];
     }
 
@@ -216,11 +233,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
-    }
-
-    public function generateEmailConfirmTocen()
-    {
-        $this->email_confirm_token = Yii::$app->security->generateRandomString();
     }
 
     public function removeEmailConfirmToken()

@@ -14,6 +14,13 @@ class NetworkService
         $this->users = $users;
     }
 
+    /**
+     * @param $network
+     * @param $identity
+     *
+     * @return array|User|\yii\db\ActiveRecord|null
+     * @throws \yii\base\Exception
+     */
     public function auth($network, $identity)
     {
         if ($user = $this->users->findByNetworkIdentity($network, $identity)) {

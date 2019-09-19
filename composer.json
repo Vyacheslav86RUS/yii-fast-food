@@ -22,7 +22,9 @@
 
         "dmstr/yii2-adminlte-asset": "^2.4",
         "la-haute-societe/yii2-save-relations-behavior": "*",
-        "yii-dream-team/yii2-upload-behavior": "*"
+        "yii-dream-team/yii2-upload-behavior": "*",
+        "kartik-v/yii2-widgets": "*",
+        "kartik-v/yii2-field-range": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
