@@ -35,6 +35,7 @@ class ItemManageService
 
     public function edit($id, ItemForm $form)
     {
+        /* @var Item $item*/
         $item = $this->items->get($id);
         $item->edit(
             $form->name,
@@ -50,6 +51,7 @@ class ItemManageService
 
     public function remove($id)
     {
+        /* @var Item $item*/
         $item = $this->items->get($id);
         $this->items->remove($item);
     }

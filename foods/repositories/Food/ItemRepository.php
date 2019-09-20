@@ -9,9 +9,10 @@ class ItemRepository
 {
     public function get($id)
     {
-        if (!$item = Item::findOne($id)) {
+        if (!$item = Item::findOne(['id' => $id])) {
             throw new NotFoundException('Предмет не найден.');
         }
+        
         return $item;
     }
 
