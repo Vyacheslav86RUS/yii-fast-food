@@ -6,7 +6,7 @@ namespace foods\repositories\Food;
 use foods\entities\Food\Category;
 use foods\repositories\NotFoundException;
 
-class CategoryRepositories
+class CategoryRepository
 {
     public function get($id)
     {
