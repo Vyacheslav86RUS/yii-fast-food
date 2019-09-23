@@ -10,7 +10,7 @@ class UserEditForm extends Model
     public $username;
     public $email;
 
-    public $_user;
+    private $_user;
 
     public function __construct(User $user, $config = [])
     {

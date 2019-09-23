@@ -1,0 +1,44 @@
+<?php
+
+namespace foods\services\manage\Food;
+
+use foods\entities\Food\Tag;
+use foods\forms\manage\Food\TagForm;
+use foods\repositories\Food\TagRepository;
+
+class TagManageService
+{
+    private $tags;
+
+    public function __construct(TagRepository $tags)
+    {
+        $this->tags = $tags;
+    }
+
+    public function create(TagForm $form)
+    {
+        $tag = Tag::create(
+            $form->name,
+            $form->slug
+        );
+        $this->tags->save($tag);
+
+        return $tag;
+    }
+
+    public function edit($id, TagForm $form)
+    {
+        $tag = $this->tags->get($id);
+        $tag->edit(
+            $form->name,
+            $form->slug
+        );
+        $this->tags->save($tag);
+    }
+
+    public function remove($id)
+    {
+        $tag = $this->tags->get($id);
+        $this->tags->remove($tag);
+    }
+}
