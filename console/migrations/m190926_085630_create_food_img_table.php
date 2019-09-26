@@ -3,25 +3,21 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%food_snack}}`.
+ * Handles the creation of table `{{%food_img}}`.
  */
-class m190923_092615_create_food_snack_table extends Migration
+class m190926_085630_create_food_img_table extends Migration
 {
-    private $tableName = '{{%food_snack}}';
+    private $tableName = '{{%food_img}}';
 
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->notNull(),
-            'meta_json' => 'JSON NOT NULL',
-            'category_id' => $this->integer()->notNull(),
-            'img_id' => $this->integer()->notNull(),
-            'value_id' => $this->integer()->notNull()
+            'path' => $this->string(255)->notNull()
         ]);
     }
 

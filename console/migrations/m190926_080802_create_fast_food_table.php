@@ -3,18 +3,17 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%food_snack}}`.
+ * Handles the creation of table `{{%fast_food}}`.
  */
-class m190923_092615_create_food_snack_table extends Migration
+class m190926_080802_create_fast_food_table extends Migration
 {
-    private $tableName = '{{%food_snack}}';
+    private $tableName = '{{%fast_food}}';
 
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->notNull(),

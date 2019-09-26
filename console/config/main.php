@@ -10,7 +10,7 @@ return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
-        'common\bootstrap\SetUp',
+        'common\bootstrap\SetUp'
     ],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [

@@ -27,26 +27,6 @@ abstract class CompositeForm extends Model
         return $success;
     }
 
-//    public function load($data, $formName = null)
-//    {
-//        $success = parent::load($data, $formName);
-//        foreach ($this->forms as $name => $form) {
-//            if (is_array($form)) {
-//                foreach ($form as $itemName => $itemFrom) {
-//                    $success = $this->loadIternal($data, $itemFrom, $formName, $itemName) && $success;
-//                }
-//            } else {
-//                $success = $this->loadIternal($data, $form, $formName, $name) && $success;
-//            }
-//        }
-//        return $success;
-//    }
-//
-//    private function loadIternal($data, Model $form, $formName, $name)
-//    {
-//        return $form->load($data, $formName ? null : $name);
-//    }
-
     public function validate($attributeNames = null, $clearErrors = true)
     {
         $parentNames = $attributeNames !== null ? array_filter((array)$attributeNames, 'is_string') : null;
@@ -61,24 +41,6 @@ abstract class CompositeForm extends Model
         }
         return $success;
     }
-
-//    public function validate($attributeNames = null, $clearErrors = true)
-//    {
-//        $parentNames = $attributeNames !== null ? array_filter((array)$attributeNames, 'is_string') : null;
-//        $success = parent::validate($parentNames, $clearErrors);
-//        foreach ($this->forms as $name => $item) {
-//            if (is_array($item)) {
-//                foreach ($item as $itemName => $itemForm) {
-//                    $innerNames = ArrayHelper::getValue($attributeNames, $itemName);
-//                    $success = $itemForm->validate($innerNames, $clearErrors) && $success;
-//                }
-//            } else {
-//                $innerNames = $attributeNames !== null ? ArrayHelper::getValue($attributeNames, $name) : null;
-//                $success = $item->validate($innerNames ?: null, $clearErrors) && $success;
-//            }
-//        }
-//        return $success;
-//    }
 
     public function hasErrors($attribute = null)
     {
