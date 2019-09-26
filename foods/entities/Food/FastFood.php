@@ -19,26 +19,20 @@ use yii\db\ActiveRecord;
  * @property Image $img
  * @property Value $value
  */
-class Snack extends ActiveRecord
+class FastFood extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{%food_snack}}';
+        return '{{%fast_food}}';
     }
 
     public static function create($name, Meta $meta)
     {
-        $snack = new static();
-        $snack->name = $name;
-        $snack->meta = $meta;
+        $fastFood = new static();
+        $fastFood->name = $name;
+        $fastFood->meta = $meta;
 
-        return $snack;
-    }
-
-    public function edit($name, Meta $meta)
-    {
-        $this->name = $name;
-        $this->meta = $meta;
+        return $fastFood;
     }
 
     public function behaviors()
@@ -64,26 +58,32 @@ class Snack extends ActiveRecord
         ];
     }
 
-//    public function attachCategory(Snack $snack, Category $category)
+//    public function attachCategory(FastFood $fastFood, Category $category)
 //    {
-//        $snack->category_id = $category->id;
+//        $fastFood->category_id = $category->id;
 //
-//        return $snack;
+//        return $fastFood;
 //    }
 //
-//    public function attachImage(Snack $snack, Image $image)
+//    public function attachImage(FastFood $fastFood, Image $image)
 //    {
-//        $snack->img_id = $image->id;
+//        $fastFood->img_id = $image->id;
 //
-//        return $snack;
+//        return $fastFood;
 //    }
 //
-//    public function attachValue(Snack $snack, Value $value)
+//    public function attachValue(FastFood $fastFood, Value $value)
 //    {
-//        $snack->value_id = $value->id;
+//        $fastFood->value_id = $value->id;
 //
-//        return $snack;
+//        return $fastFood;
 //    }
+
+    public function edit($name, Meta $meta)
+    {
+        $this->name = $name;
+        $this->meta = $meta;
+    }
 
     public function getCategory()
     {
