@@ -7,7 +7,7 @@ use yii\base\Behavior;
 class ReferencesBehavior extends Behavior
 {
     public $refModel;
-    public $refAttribute;
+    public $refAttribute = 'id';
     public $ownerAttribute;
 
     public function getRefModel()

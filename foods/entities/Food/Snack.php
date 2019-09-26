@@ -60,7 +60,25 @@ class Snack extends ActiveRecord
                 'class' => MetaBehavior::class,
                 'attribute' => 'meta',
                 'jsonAttribute' => 'meta_json',
-            ]
+            ],
+//            'ReferencesCategoryBehavior' => [
+//                'class' => ReferencesBehavior::class,
+//                'refModel' => Category::class,
+//                'refAttribute' => 'id',
+//                'ownerAttribute' => 'category_id'
+//            ],
+//            'ReferencesImageBehavior' => [
+//                'class' => ReferencesBehavior::class,
+//                'refModel' => Image::class,
+//                //'refAttribute' => 'id',
+//                'ownerAttribute' => 'img_id'
+//            ],
+//            'ReferencesValueBehavior' => [
+//                'class' => ReferencesBehavior::class,
+//                'refModel' => Value::class,
+//                //'refAttribute' => 'id',
+//                'ownerAttribute' => 'value_id'
+//            ]
         ];
     }
 
