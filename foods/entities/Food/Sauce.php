@@ -44,64 +44,20 @@ class Sauce extends ActiveRecord
     public function behaviors()
     {
         return [
-            'AttachCategoryBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'category_id'
-            ],
-            'AttachImageBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'img_id'
-            ],
-            'AttachValueBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'value_id'
-            ],
             'MetaBehavior' => [
                 'class' => MetaBehavior::class,
                 'attribute' => 'meta',
                 'jsonAttribute' => 'meta_json',
             ],
-//            'ReferencesCategoryBehavior' => [
-//                'class' => ReferencesBehavior::class,
-//                'refModel' => Category::class,
-//                'refAttribute' => 'id',
-//                'ownerAttribute' => 'category_id'
-//            ],
-//            'ReferencesImageBehavior' => [
-//                'class' => ReferencesBehavior::class,
-//                'refModel' => Image::class,
-//                //'refAttribute' => 'id',
-//                'ownerAttribute' => 'img_id'
-//            ],
-//            'ReferencesValueBehavior' => [
-//                'class' => ReferencesBehavior::class,
-//                'refModel' => Value::class,
-//                //'refAttribute' => 'id',
-//                'ownerAttribute' => 'value_id'
-//            ]
         ];
     }
 
-//    public function attachCategory(Sauce $sauce, Category $category)
-//    {
-//        $sauce->category_id = $category->id;
-//
-//        return $sauce;
-//    }
-//
-//    public function attachImage(Sauce $sauce, Image $image)
-//    {
-//        $sauce->img_id = $image->id;
-//
-//        return $sauce;
-//    }
-//
-//    public function attachValue(Sauce $sauce, Value $value)
-//    {
-//        $sauce->value_id = $value->id;
-//
-//        return $sauce;
-//    }
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
 
     public function getCategory()
     {

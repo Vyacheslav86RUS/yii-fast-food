@@ -5,6 +5,7 @@ namespace foods\entities\Food;
 use foods\behaviors\AttachModelAttributeBehavior;
 use foods\behaviors\MetaBehavior;
 use foods\entities\Meta;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use yii\db\ActiveRecord;
 
 /**
@@ -44,64 +45,24 @@ class Snack extends ActiveRecord
     public function behaviors()
     {
         return [
-            'AttachCategoryBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'category_id'
-            ],
-            'AttachImageBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'img_id'
-            ],
-            'AttachValueBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'value_id'
-            ],
             'MetaBehavior' => [
                 'class' => MetaBehavior::class,
                 'attribute' => 'meta',
                 'jsonAttribute' => 'meta_json',
             ],
-//            'ReferencesCategoryBehavior' => [
-//                'class' => ReferencesBehavior::class,
-//                'refModel' => Category::class,
-//                'refAttribute' => 'id',
-//                'ownerAttribute' => 'category_id'
-//            ],
-//            'ReferencesImageBehavior' => [
-//                'class' => ReferencesBehavior::class,
-//                'refModel' => Image::class,
-//                //'refAttribute' => 'id',
-//                'ownerAttribute' => 'img_id'
-//            ],
-//            'ReferencesValueBehavior' => [
-//                'class' => ReferencesBehavior::class,
-//                'refModel' => Value::class,
-//                //'refAttribute' => 'id',
-//                'ownerAttribute' => 'value_id'
-//            ]
+            'saveRelations' => [
+                'class' => SaveRelationsBehavior::class,
+                'relations' => ['category', 'img', 'value']
+            ]
         ];
     }
 
-//    public function attachCategory(Snack $snack, Category $category)
-//    {
-//        $snack->category_id = $category->id;
-//
-//        return $snack;
-//    }
-//
-//    public function attachImage(Snack $snack, Image $image)
-//    {
-//        $snack->img_id = $image->id;
-//
-//        return $snack;
-//    }
-//
-//    public function attachValue(Snack $snack, Value $value)
-//    {
-//        $snack->value_id = $value->id;
-//
-//        return $snack;
-//    }
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
 
     public function getCategory()
     {

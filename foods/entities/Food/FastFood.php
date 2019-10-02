@@ -6,6 +6,7 @@ use foods\behaviors\AttachModelAttributeBehavior;
 use foods\behaviors\MetaBehavior;
 use foods\behaviors\ReferencesBehavior;
 use foods\entities\Meta;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use yii\db\ActiveRecord;
 
 /**
@@ -39,18 +40,18 @@ class FastFood extends ActiveRecord
     public function behaviors()
     {
         return [
-            'AttachCategoryBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'category_id'
-            ],
-            'AttachImageBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'img_id'
-            ],
-            'AttachValueBehavior' => [
-                'class' => AttachModelAttributeBehavior::class,
-                'attachAttribute' => 'value_id'
-            ],
+//            'AttachCategoryBehavior' => [
+//                'class' => AttachModelAttributeBehavior::class,
+//                'attachAttribute' => 'category_id'
+//            ],
+//            'AttachImageBehavior' => [
+//                'class' => AttachModelAttributeBehavior::class,
+//                'attachAttribute' => 'img_id'
+//            ],
+//            'AttachValueBehavior' => [
+//                'class' => AttachModelAttributeBehavior::class,
+//                'attachAttribute' => 'value_id'
+//            ],
             'MetaBehavior' => [
                 'class' => MetaBehavior::class,
                 'attribute' => 'meta',
@@ -59,7 +60,7 @@ class FastFood extends ActiveRecord
 //            'ReferencesCategoryBehavior' => [
 //                'class' => ReferencesBehavior::class,
 //                'refModel' => Category::class,
-//                'refAttribute' => 'id',
+//                //'refAttribute' => 'id',
 //                'ownerAttribute' => 'category_id'
 //            ],
 //            'ReferencesImageBehavior' => [
@@ -74,6 +75,10 @@ class FastFood extends ActiveRecord
 //                //'refAttribute' => 'id',
 //                'ownerAttribute' => 'value_id'
 //            ]
+            'saveRelations' => [
+                'class' => SaveRelationsBehavior::class,
+                'relations' => ['category', 'img', 'value']
+            ]
         ];
     }
 
@@ -97,6 +102,13 @@ class FastFood extends ActiveRecord
 //
 //        return $fastFood;
 //    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
 
     public function edit($name, Meta $meta)
     {
