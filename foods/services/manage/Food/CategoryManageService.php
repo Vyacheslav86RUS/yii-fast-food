@@ -67,6 +67,7 @@ class CategoryManageService
         $this->assertIsNotRoot($category);
         $this->categories->remove($category);
     }
+
     private function assertIsNotRoot(Category $category)
     {
         if ($category->isRoot()) {
