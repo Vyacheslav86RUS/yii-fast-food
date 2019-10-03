@@ -9,7 +9,7 @@ class SignupForm extends Model
 {
     public $username;
     public $email;
-    public $phone;
+    // public $phone;
     public $password;
 
     /**
@@ -28,9 +28,9 @@ class SignupForm extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => User::class, 'message' => 'This email address has already been taken.'],
             ['password', 'required'],
-            ['password', 'string', 'min' => 6],
-            ['phone', 'required'],
-            ['phone', 'integer'],
+            ['password', 'string', 'min' => 5],
+            //['phone', 'required'],
+            //['phone', 'integer'],
         ];
     }
 }
