@@ -27,6 +27,9 @@ info "Update OS software"
 apt-get update
 apt-get upgrade -y
 
+info "mc file manager"
+apt-get install mc
+
 info "Install additional software"
 apt-get install -y php7.3-curl php7.3-cli php7.3-intl php7.3-mysqlnd php7.3-gd php7.3-fpm php7.3-mbstring php7.3-xml unzip nginx mysql-server-5.7 php.xdebug
 
@@ -67,3 +70,6 @@ echo "Done!"
 
 info "Install composer"
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+info "Alias"
+alias codecept = "php vendor/bin/codecept"

@@ -25,7 +25,8 @@
         "yii-dream-team/yii2-upload-behavior": "*",
         "kartik-v/yii2-widgets": "*",
         "kartik-v/yii2-field-range": "*",
-        "paulzi/yii2-nested-sets" : "^1.0"
+        "paulzi/yii2-nested-sets" : "^1.0",
+        "codeception/codeception": "4.0.x-dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
