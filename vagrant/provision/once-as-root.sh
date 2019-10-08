@@ -70,6 +70,3 @@ echo "Done!"
 
 info "Install composer"
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-info "Alias"
-alias codecept = "php vendor/bin/codecept"
